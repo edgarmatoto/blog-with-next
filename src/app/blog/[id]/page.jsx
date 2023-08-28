@@ -1,30 +1,38 @@
+'use client'
+
 import Image from "next/image"
 import styles from "./page.module.css"
 import { notFound } from 'next/navigation';
+import { useEffect, useState } from "react";
 
-async function getData(id) {
-  const res = await fetch(`http://localhost:3000/api/posts/${id}`, {
-    cache: 'no-store',
-  });
+// export async function generateMetadata({ params }) {
+//   const post = await getData(params.id);
 
-  if (!res.ok) {
-    return notFound();
+//   return {
+//     title: post.title,
+//     description: post.desc,
+//   }
+// }
+
+const BlogPost = ({ params }) => {
+  const [data, setData] = useState({});
+
+  async function getData(id) {
+    const res = await fetch(`/api/posts/${id}`, {
+      cache: 'no-store',
+    });
+  
+    if (!res.ok) {
+      return notFound();
+    }
+  
+    const postData = await res.json();
+    setData(postData);
   }
 
-  return res.json();
-}
-
-export async function generateMetadata({ params }) {
-  const post = await getData(params.id);
-
-  return {
-    title: post.title,
-    description: post.desc,
-  }
-}
-
-const BlogPost = async ({ params }) => {
-  const data = await getData(params.id);
+  useEffect(() => {
+    getData(params.id);
+  }, [params]);
 
   return (
     <div className={styles.container}>

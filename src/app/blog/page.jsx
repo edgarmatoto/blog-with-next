@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const Blog = () => {
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
 
   async function getData() {
     const res = await fetch('/api/posts', {
